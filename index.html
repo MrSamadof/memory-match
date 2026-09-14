@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Memory Match — brauzerda ishlaydigan, kutubxonalarsiz yozilgan xotira o'yini.">
+  <title>Memory Match — Xotira o'yini</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/game.js" defer></script>
+</head>
+<body>
+  <div class="app">
+
+    <!-- ============ HEADER: sarlavha, daraja tanlash, qayta boshlash ============ -->
+    <header class="header glass">
+      <h1 class="title">Memory Match</h1>
+
+      <div class="levels" role="group" aria-label="Daraja tanlash">
+        <button type="button" class="level-btn is-active" data-level="easy" aria-pressed="true">Oson</button>
+        <button type="button" class="level-btn" data-level="medium" aria-pressed="false">O'rta</button>
+        <button type="button" class="level-btn" data-level="hard" aria-pressed="false">Qiyin</button>
+      </div>
+
+      <button type="button" class="restart-btn" id="restartBtn">
+        <span aria-hidden="true">&#8635;</span>
+        <span>Qayta boshlash</span>
+      </button>
+    </header>
+
+    <!-- ============ STATISTIKA PANELI ============ -->
+    <section class="stats glass" aria-label="O'yin statistikasi">
+      <div class="stat">
+        <span class="stat-label">Vaqt</span>
+        <span class="stat-value" id="timerEl">00:00</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Harakat</span>
+        <span class="stat-value" id="movesEl">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Ochko</span>
+        <span class="stat-value" id="scoreEl">0</span>
+      </div>
+    </section>
+
+    <!-- ============ O'YIN TAXTASI ============ -->
+    <main class="board-wrap">
+      <div class="board" id="boardEl" data-level="easy" role="group" aria-label="O'yin taxtasi"></div>
+    </main>
+
+  </div>
+
+  <!-- ============ G'ALABA OVERLAY EKRANI ============ -->
+  <div class="overlay" id="overlayEl" hidden>
+    <div class="overlay-card glass" role="dialog" aria-modal="true" aria-labelledby="overlayTitle">
+      <h2 class="overlay-title" id="overlayTitle">G'alaba!</h2>
+      <p class="overlay-sub">Barcha juftlar topildi 🎉</p>
+
+      <dl class="overlay-stats">
+        <div class="overlay-row">
+          <dt>Ketgan vaqt</dt>
+          <dd id="ovTime">00:00</dd>
+        </div>
+        <div class="overlay-row">
+          <dt>Harakatlar</dt>
+          <dd id="ovMoves">0</dd>
+        </div>
+        <div class="overlay-row">
+          <dt>Vaqt bonusi</dt>
+          <dd id="ovBonus">+0</dd>
+        </div>
+        <div class="overlay-row overlay-row--total">
+          <dt>Yakuniy ochko</dt>
+          <dd id="ovScore">0</dd>
+        </div>
+      </dl>
+
+      <div class="overlay-actions">
+        <button type="button" class="btn btn-primary" id="playAgainBtn">Qayta o'ynash</button>
+        <button type="button" class="btn btn-ghost" id="chooseLevelBtn">Daraja tanlash</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
