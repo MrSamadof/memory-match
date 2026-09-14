@@ -65,6 +65,8 @@
     moves:   0,
     score:   0,
     locked:  false, /* taxta bloklanganmi (ikki karta tekshirilmoqda) */
+    wrongTimeoutId: null, /* navbatdagi "noto'g'ri juft" setTimeout ID'si */
+    roundId: 0,           /* har o'yinga beriladigan noyob raqam */
     timer: {
       running:    false,
       startTime:  0,
@@ -328,7 +330,25 @@
         state.cards[i].el.classList.add('is-wrong');
       });
 
-      window.setTimeout(function () {
+      /* Oldingi "noto'g'ri juft" taymeri hali tugamagan bo'lsa — bekor qilamiz.
+         Nazariy jihatdan bu yerga yetib kelganda u null bo'lishi kerak,
+         lekin himoya uchun baribir tozalaymiz. */
+      if (state.wrongTimeoutId !== null) {
+        window.clearTimeout(state.wrongTimeoutId);
+        state.wrongTimeoutId = null;
+      }
+
+      /* Joriy raundni eslab qolamiz — callback ichida tekshiramiz.
+         Agar shu oraliqda resetGame() chaqirilib, yangi raund boshlangan
+         bo'lsa, bu callback endi eskirgan hisoblanadi va hech nima qilmaydi. */
+      const scheduledRound = state.roundId;
+
+      state.wrongTimeoutId = window.setTimeout(function () {
+        /* Raund o'zgargan bo'lsa — bu callback eskirgan, chiqib ketamiz. */
+        if (scheduledRound !== state.roundId) {
+          return;
+        }
+
         [a, b].forEach(function (i) {
           const el = state.cards[i].el;
           el.classList.remove('is-wrong');
@@ -338,6 +358,7 @@
 
         state.flipped = [];
         state.locked = false;
+        state.wrongTimeoutId = null;
       }, WRONG_DELAY);
     }
   }
@@ -396,6 +417,18 @@
    */
   function resetGame(levelKey) {
     stopTimer();
+
+    /* Navbatda turgan "noto'g'ri juft" taymerini bekor qilamiz —
+       aks holda u yangi o'yinda eski indekslar bo'yicha kartalarni
+       noto'g'ri yopib, holatni DOM bilan mos kelmaydigan qilib qo'yadi. */
+    if (state.wrongTimeoutId !== null) {
+      window.clearTimeout(state.wrongTimeoutId);
+      state.wrongTimeoutId = null;
+    }
+
+    /* Har yangi o'yin uchun noyob raund raqami — eski setTimeout
+       callback'lari o'zini "eskirgan" deb bilib, hech nima qilmaydi. */
+    state.roundId += 1;
 
     if (levelKey && LEVELS[levelKey]) {
       state.level = levelKey;
